@@ -27,10 +27,14 @@
 #    include "battery.h"
 #endif
 
+bool is_win_mode = false;
+
 #ifdef DIP_SWITCH_ENABLE
 bool dip_switch_update_kb(uint8_t index, bool active) {
     if (index == 0) {
-        default_layer_set(1UL << (active ? 2 : 0));
+        // default_layer_set(1UL << (active ? 2 : 0));
+        default_layer_set(1UL << 2); // Always force Windows base layout (Layer 2)
+        is_win_mode = active;
     }
     dip_switch_update_user(index, active);
 

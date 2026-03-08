@@ -119,7 +119,13 @@ void keychron_wireless_common_task(void) {
     }
 }
 
+__attribute__((weak)) bool is_win_mode = true;
+
 void wireless_pre_task(void) {
+    if (!is_win_mode) {
+        return;
+    }
+
     static uint8_t  dip_switch_state = 0;
     static uint32_t time = 0;
 
