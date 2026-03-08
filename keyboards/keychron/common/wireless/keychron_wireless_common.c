@@ -33,11 +33,17 @@ bool firstDisconnect = true;
 static uint32_t pairing_key_timer;
 static uint8_t  host_idx = 0;
 
+__attribute__((weak)) bool is_win_mode = true;
+
 bool process_record_keychron_wireless(uint16_t keycode, keyrecord_t *record) {
     static uint8_t host_idx;
 
     switch (keycode) {
         case BT_HST1 ... BT_HST3:
+            if (!is_win_mode && record->event.pressed && get_transport() != TRANSPORT_BLUETOOTH) {
+                set_transport(TRANSPORT_BLUETOOTH);
+                wait_ms(20);
+            }
             if (get_transport() == TRANSPORT_BLUETOOTH) {
                 if (record->event.pressed) {
                     host_idx = keycode - BT_HST1 + 1;
@@ -118,8 +124,6 @@ void keychron_wireless_common_task(void) {
         }
     }
 }
-
-__attribute__((weak)) bool is_win_mode = true;
 
 void wireless_pre_task(void) {
     if (!is_win_mode) {
